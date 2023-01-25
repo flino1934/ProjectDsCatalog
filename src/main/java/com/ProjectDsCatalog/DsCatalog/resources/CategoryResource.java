@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ProjectDsCatalog.DsCatalog.dto.CategoryDTO;
 import com.ProjectDsCatalog.DsCatalog.services.CategoryService;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @RestController
 @RequestMapping(value = "/categories")
 public class CategoryResource {
