@@ -14,23 +14,20 @@ import com.ProjectDsCatalog.DsCatalog.dto.CategoryDTO;
 import com.ProjectDsCatalog.DsCatalog.entities.Category;
 import com.ProjectDsCatalog.DsCatalog.repositories.CategoryRepository;
 import com.ProjectDsCatalog.DsCatalog.services.exceptions.DatabaseException;
+import com.ProjectDsCatalog.DsCatalog.services.exceptions.EntityNotFoundException;
 
-import jakarta.persistence.EntityNotFoundException;
-
-
-
+//problemas com a importacao de classe entitynotfoundexception pq e o mesmo nome que a excecao do jakarta. 
 @Service
 public class CategoryService {
-	
+
 	@Autowired
 	private CategoryRepository repository;
-	
-	@Transactional(readOnly = true)
-	public List<CategoryDTO> findAll(){
-	List<Category> list = repository.findAll();
-	 return list.stream().map(x -> new CategoryDTO(x)).collect(Collectors.toList());
 
-		
+	@Transactional(readOnly = true)
+	public List<CategoryDTO> findAll() {
+		List<Category> list = repository.findAll();
+		return list.stream().map(x -> new CategoryDTO(x)).collect(Collectors.toList());
+
 	}
 
 	@Transactional(readOnly = true)
@@ -39,6 +36,7 @@ public class CategoryService {
 		Category entity = obj.orElseThrow(() -> new EntityNotFoundException("Entity not found"));
 		return new CategoryDTO(entity);
 	}
+
 	@Transactional(readOnly = true)
 	public CategoryDTO insert(CategoryDTO dto) {
 		Category entity = new Category();
@@ -46,31 +44,27 @@ public class CategoryService {
 		entity = repository.save(entity);
 		return new CategoryDTO(entity);
 	}
+
 	@Transactional
 	public CategoryDTO update(Long id, CategoryDTO dto) {
 		try {
-		Category entity = repository.getReferenceById(id);
-		entity.setName(dto.getName());
-		entity = repository.save(entity);
-		return new CategoryDTO(entity);
-		}
-		catch (EntityNotFoundException e) {
+			Category entity = repository.getReferenceById(id);
+			entity.setName(dto.getName());
+			entity = repository.save(entity);
+			return new CategoryDTO(entity);
+		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException("Id not found" + id);
-			
 		}
-		
 	}
 
-	
 	public void delete(Long id) {
 		try {
-		repository.deleteById(id);
-	}catch(EmptyResultDataAccessException e) {
-		throw new EntityNotFoundException("Id not found" + id);
-	}
-		catch(DataIntegrityViolationException e) {
+			repository.deleteById(id);
+		} catch (EmptyResultDataAccessException e) {
+			throw new EntityNotFoundException("Id not found" + id);
+		} catch (DataIntegrityViolationException e) {
 			throw new DatabaseException("Integrity violation");
-			
+
 		}
 	}
 

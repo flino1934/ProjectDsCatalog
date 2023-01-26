@@ -11,10 +11,10 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
 public class ResourceExceptionHandler {
-	
+
 	@ExceptionHandler(EntityNotFoundException.class)
-	public ResponseEntity<StandardError> entityNotFound(EntityNotFoundException e, HttpServletRequest request){
-		 StandardError err = new StandardError();
+	public ResponseEntity<StandardError> entityNotFound(EntityNotFoundException e, HttpServletRequest request) {
+		StandardError err = new StandardError();
 		err.setTimestamp(Instant.now());
 		err.setStatus(HttpStatus.NOT_FOUND.value());
 		err.setError("Resource not found");
@@ -22,10 +22,11 @@ public class ResourceExceptionHandler {
 		err.setPath(request.getRequestURI());
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
 
-}
+	}
+
 	@ExceptionHandler(DatabaseException.class)
-	public ResponseEntity<StandardError> database(EntityNotFoundException e, HttpServletRequest request){
-		 StandardError err = new StandardError();
+	public ResponseEntity<StandardError> database(EntityNotFoundException e, HttpServletRequest request) {
+		StandardError err = new StandardError();
 		err.setTimestamp(Instant.now());
 		err.setStatus(HttpStatus.BAD_REQUEST.value());
 		err.setError("Database exception");
@@ -33,5 +34,5 @@ public class ResourceExceptionHandler {
 		err.setPath(request.getRequestURI());
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 
-}
+	}
 }
