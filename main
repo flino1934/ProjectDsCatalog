@@ -37,7 +37,7 @@ public class Main {
 
 		Cliente cliente = new Cliente("07221134049", "Allan da Silva", "cliente", 20);
 		Cliente cliente2 = new Cliente("72840700050", "Samuel da Silva", "cliente2", 24);
-
+		
 		//admin apenas realiza compras como se fosse um cliente.
 		Usuario usuario1 = new Usuario("admin", "1234", null, null);
 		Usuario usuario2 = new Usuario("empresa", "1234", null, empresa);
@@ -45,8 +45,7 @@ public class Main {
 		Usuario usuario4 = new Usuario("cliente2", "1234", cliente2, null);
 		Usuario usuario5 = new Usuario("empresa2", "1234", null, empresa2);
 		Usuario usuario6 = new Usuario("empresa3", "1234", null, empresa3);
-
-
+ 		
 		List<Usuario> usuarios = Arrays.asList(usuario1, usuario2, usuario3, usuario4, usuario5, usuario6);
 		List<Cliente> clientes = Arrays.asList(cliente, cliente2);
 		List<Empresa> empresas = Arrays.asList(empresa, empresa2, empresa3);
@@ -73,7 +72,7 @@ public class Main {
 			if ((usuarioLogado.getSenha().equals(senha))) {
 
 				System.out.println("Escolha uma opção para iniciar");
-				if (usuarioLogado.IsEmpresa()) {
+				if (usuarioLogado.IsEmpresa() || usuarioLogado.IsAdmin()) {
 					System.out.println("1 - Listar vendas");
 					System.out.println("2 - Ver produtos");
 					System.out.println("0 - Deslogar");
@@ -215,7 +214,7 @@ public class Main {
 		Double total = carrinho.stream().mapToDouble(Produto::getPreco).sum();
 		Double comissaoSistema = total * empresa.getTaxa();
 		int idVenda = vendas.isEmpty() ? 1 : vendas.get(vendas.size() - 1).getCódigo() + 1;
-		Venda venda = new Venda(idVenda, carrinho.stream().toList(), total, comissaoSistema, empresa, cliente);
+		Venda venda = new Venda(idVenda, ( carrinho.stream()).collect(Collectors.toList()), total, comissaoSistema, empresa, cliente);
 		empresa.setSaldo(empresa.getSaldo() + total);
 		vendas.add(venda);
 		return venda;
