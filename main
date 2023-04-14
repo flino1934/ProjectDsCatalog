@@ -20,8 +20,8 @@ public class Main {
 		List<Produto> carrinho = new ArrayList<Produto>();
 		List<Venda> vendas = new ArrayList<Venda>();
 
-		Empresa empresa = new Empresa(2, "SafeWay Padaria", "30021423000159", 0.15, 0.0);
-		Empresa empresa2 = new Empresa(1, "Level Varejo", "53239160000154", 0.05, 0.0);
+		Empresa empresa = new Empresa(1, "SafeWay Padaria", "30021423000159", 0.15, 0.0);
+		Empresa empresa2 = new Empresa(2, "Level Varejo", "53239160000154", 0.05, 0.0);
 		Empresa empresa3 = new Empresa(3, "SafeWay Restaurante", "41361511000116", 0.20, 0.0);
 
 		Produto produto = new Produto(1, "Pão Frances", 5, 3.50, empresa);
@@ -131,7 +131,74 @@ public class Main {
 					}
 					}
 
-				} else {
+				} else if (usuarioLogado.IsAdmin()) {
+					System.out.println("1 - SafeWay Padaria");
+					System.out.println("2 - Level Varejo");
+					System.out.println("3 - SafeWay Restaurante");
+					Integer escolhaDaEmpresa = sc.nextInt();
+					Empresa empresaEscolhida = empresas.stream().filter(x -> x.getId().equals(escolhaDaEmpresa))
+							.collect(Collectors.toList()).get(0);
+					
+					
+					System.out.println("1 - Listar vendas");
+					System.out.println("2 - Ver produtos");
+					System.out.println("0 - Deslogar");
+					Integer escolha = sc.nextInt();
+
+					switch (escolha) {
+					case 1: {
+						System.out.println();
+						System.out.println("************************************************************");
+						System.out.println("VENDAS EFETUADAS");
+						vendas.stream().forEach(venda -> {
+							if (venda.getEmpresa().getId().equals(usuarioLogado.getEmpresa().getId())) {
+								System.out.println("************************************************************");
+								System.out.println("Venda de código: " + venda.getCódigo() + " no CPF "
+										+ venda.getCliente().getCpf() + ": ");
+								venda.getItens().stream().forEach(x -> {
+									System.out.println(x.getId() + " - " + x.getNome() + "    R$" + x.getPreco());
+								});
+								System.out.println("Total Venda: R$" + venda.getValor());
+								System.out.println("Total Taxa a ser paga: R$" + venda.getComissaoSistema());
+								System.out.println("Total Líquido  para empresa"
+										+ (venda.getValor() - venda.getComissaoSistema()));
+								System.out.println("************************************************************");
+							}
+
+						});
+						System.out.println("Saldo Empresa: " + usuarioLogado.getEmpresa().getSaldo());
+						System.out.println("************************************************************");
+
+						executar(usuarios, clientes, empresas, produtos, carrinho, vendas);
+					}
+					case 2: {
+						System.out.println();
+						System.out.println("************************************************************");
+						System.out.println("MEUS PRODUTOS");
+						produtos.stream().forEach(produto -> {
+							if (produto.getEmpresa().getId().equals(usuarioLogado.getEmpresa().getId())) {
+								System.out.println("************************************************************");
+								System.out.println("Código: " + produto.getId());
+								System.out.println("Produto: " + produto.getNome());
+								System.out.println("Quantidade em estoque: " + produto.getQuantidade());
+								System.out.println("Valor: R$" + produto.getPreco());								
+								System.out.println("************************************************************");
+							}
+
+						});
+						System.out.println("Saldo Empresa: " + usuarioLogado.getEmpresa().getSaldo());
+						System.out.println("************************************************************");
+
+						executar(usuarios, clientes, empresas, produtos, carrinho, vendas);
+					}
+					case 0: {
+						executar(usuarios, clientes, empresas, produtos, carrinho, vendas);
+
+					}
+					}
+					
+					
+				}else {
 					System.out.println("1 - Relizar Compras");
 					System.out.println("2 - Ver Compras");
 					System.out.println("0 - Deslogar");
@@ -221,3 +288,4 @@ public class Main {
 		return venda;
 	}
 }
+
